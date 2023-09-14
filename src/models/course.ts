@@ -4,11 +4,11 @@ const courseSchema = new Schema({
   course_name: {
     type: String,
   },
-  instrutor_name: {
+  instructor_name: {
     type: String,
   },
   start_date: {
-    type: Date,
+    type: String,
   },
   min_employees: {
     type: Number,
@@ -17,3 +17,6 @@ const courseSchema = new Schema({
     type: Number,
   },
 });
+export default mongoose.model("courses", courseSchema);
+
+// export default courseSchema;
