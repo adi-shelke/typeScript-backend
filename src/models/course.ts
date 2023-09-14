@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const courseSchema = new Schema({
   course_name: {
     type: String,
+    required:true
   },
   instructor_name: {
     type: String,
@@ -12,10 +13,15 @@ const courseSchema = new Schema({
   },
   min_employees: {
     type: Number,
+    required:true
   },
   max_employees: {
     type: Number,
+    required: true
   },
+  total_enrolled:{
+    type:Number
+  }
 });
 export default mongoose.model("courses", courseSchema);
 

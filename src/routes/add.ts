@@ -1,6 +1,6 @@
 import express from "express";
 import courses from "../models/Course";
-import details from "../models/EnrollmentDetails";
+import CourseEnrollments from "../models/CourseEnrollments";
 const router = express.Router();
 
 router.post("/courseOffering", async (req, res) => {
@@ -34,11 +34,7 @@ router.post("/courseOffering", async (req, res) => {
       start_date,
       min_employees,
       max_employees,
-    });
-    const courseDetails = await details.create({
-      course_id: course._id,
-      max_employees,
-      current_employees: 0,
+      total_enrolled: 0,
     });
     res.json({
       status: 200,
@@ -57,10 +53,10 @@ router.post("/courseOffering", async (req, res) => {
 router.post("/register/:id", async (req, res) => {
   const courseId = req.params.id;
   const { employee_name, email, course_id } = req.body;
-  const courseDetails = await details.findOne({ course_id: courseId });
-  const maxEmployees = courseDetails?.max_employees
-  const currentEmployees = courseDetails?.current_employees
-  if (currentEmployees===maxEmployees) {
+  const course = await courses.findOne({ course_id: courseId });
+  const maxEmployes = course?.max_employees;
+  let totalEmployees = course?.total_enrolled;
+  if (totalEmployees === maxEmployes) {
     res.json({
       status: 400,
       message: "COURSE_FULL_ERROR",
@@ -71,7 +67,32 @@ router.post("/register/:id", async (req, res) => {
       },
     });
   }
-  
+  try {
+    const enrolledCourse = await CourseEnrollments.create({
+      employee_name: employee_name,
+      email: email,
+      course_id,
+    });
+
+    totalEmployees = totalEmployees ? totalEmployees + 1 : 0;
+    //update enroll count
+    // await courses.findByIdAndUpdate(
+    //   { course_id: courseId },
+    //   { total_enrolled :totalEmployees}
+    // );
+    res.json({
+      status: 200,
+      message: `Successfully registered for ${course?.course_name}`,
+      data: {
+        success: {
+          registration_id: enrolledCourse._id,
+          status: "ACCEPTED",
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export default router;
