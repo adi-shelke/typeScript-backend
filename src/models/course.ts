@@ -23,7 +23,7 @@ const courseSchema = new Schema({
     type:Number
   },
   status: {
-    type:String
+    type:Boolean
   }
 });
 export default mongoose.model("courses", courseSchema);

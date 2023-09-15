@@ -7,6 +7,7 @@ import cors from "cors";
 import connect from "./connectDb";
 import add from "./routes/add"
 import allot from "./routes/allot"
+import cancel from "./routes/cancel"
 const app = express();
 app.use(
   cors({
@@ -19,7 +20,8 @@ app.use(cookieParser());
 app.use(express.json());
 connect();
 app.use("/add/", add)
-app.use("/allot",allot)
+app.use("/allot", allot)
+app.use("/cancel",cancel)
 
 const server = http.createServer(app);
 server.listen(8080, () => {

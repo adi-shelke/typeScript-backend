@@ -17,7 +17,7 @@ router.post("/courseOffering", async (req, res) => {
       instructor_name: instructor_name,
     });
     if (isAlreadyPresent) {
-      res.json({
+       res.json({
         status: 400,
         message: "Course already present",
         data: {
@@ -35,7 +35,7 @@ router.post("/courseOffering", async (req, res) => {
       min_employees,
       max_employees,
       total_enrolled: 0,
-      status:"pending"
+      status:false
     });
     res.json({
       status: 200,
@@ -69,7 +69,7 @@ router.post("/register/:id", async (req, res) => {
     });
   }
   else {
-    const course = await courses.findOne({ course_id: courseId });
+    const course = await courses.findOne({_id: courseId });
     const maxEmployes = course?.max_employees;
     let totalEmployees = course?.total_enrolled;
     if (totalEmployees === maxEmployes) {
@@ -91,15 +91,15 @@ router.post("/register/:id", async (req, res) => {
         });
         if (totalEmployees? totalEmployees+ 1:0 === maxEmployes) {
           const updateStatus = await courses.updateOne(
-            { course_id: req.params.id },
+            {_id: req.params.id },
             {
               $set: {
-              status:"allotted"
+              status:true
             }}
           )
         }
         const update = await courses.updateOne(
-          { course_id: req.params.id },
+          {_id: req.params.id },
           { $inc: { total_enrolled: +1 } }
         );
         res.json({
