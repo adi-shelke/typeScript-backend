@@ -21,6 +21,9 @@ const courseSchema = new Schema({
   },
   total_enrolled:{
     type:Number
+  },
+  status: {
+    type:String
   }
 });
 export default mongoose.model("courses", courseSchema);

@@ -35,6 +35,7 @@ router.post("/courseOffering", async (req, res) => {
       min_employees,
       max_employees,
       total_enrolled: 0,
+      status:"pending"
     });
     res.json({
       status: 200,
@@ -88,7 +89,15 @@ router.post("/register/:id", async (req, res) => {
           email: email,
           course_id,
         });
-
+        if (totalEmployees? totalEmployees+ 1:0 === maxEmployes) {
+          const updateStatus = await courses.updateOne(
+            { course_id: req.params.id },
+            {
+              $set: {
+              status:"allotted"
+            }}
+          )
+        }
         const update = await courses.updateOne(
           { course_id: req.params.id },
           { $inc: { total_enrolled: +1 } }
